@@ -14,8 +14,18 @@ use Catalyst::Runtime 5.80;
 #                 directory
 
 use parent qw/Catalyst/;
-use Catalyst qw/-Debug
-/;
+use Catalyst qw/
+    ConfigLoader
+    Static::Simple
+
+    Session
+    Session::Store::FastMmap
+    Session::State::Cookie
+    Session::PerUser
+
+    Authentication
+ /;
+
 our $VERSION = '0.01';
 
 # Configure the application.
@@ -27,17 +37,6 @@ our $VERSION = '0.01';
 # with an external configuration file acting as an override for
 # local deployment.
 
-use Catalyst qw/
-    ConfigLoader
-    Static::Simple
-
-    Authentication
-
-    Session
-    Session::Store::FastMmap
-    Session::State::Cookie
- /;
- 
 __PACKAGE__->config(
     name                     => 'TwitMeet',
     "Plugin::Authentication" => {
@@ -48,7 +47,7 @@ __PACKAGE__->config(
 
                 consumer_key    => 'twitter-consumer_key-here',
                 consumer_secret => 'twitter-secret-here',
-                callback_url    => 'http://twitmeet.com/accounts/add',
+                callback_url    => 'http://twitmeet.net/accounts/add',
 
                 # you can bypass the above by including
                 # "twitter_consumer_key", "twitter_consumer_secret",

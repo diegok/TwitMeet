@@ -16,17 +16,34 @@ Catalyst Controller.
 
 =cut
 
+sub login : Path( /login ) Args(0) {
+    my ($self, $c) = @_;
+    
+    my $realm = $c->get_auth_realm('twitter');
+    $c->res->redirect( $realm->credential->authenticate_twitter_url($c) );
+ }
 
-=head2 index
+=head2 callback
 
 =cut
-
-sub index :Path :Args(0) {
+sub callback : Private {
     my ( $self, $c ) = @_;
 
-    $c->response->body('Matched TwitMeet::Controller::Auth in Auth.');
-}
+    if ( my $user = $c->authenticate( undef, 'twitter' ) ) {
 
+        # user has an account - redirect or do something cool
+        $c->res->redirect("/accounts");
+    }
+    else {
+
+        # user doesn't have an account - either detect Twitter
+        # credentials and create one, or return an error.
+        #
+        # Note that "request_token" and "request_token_secret"
+        # are stored in $c->user_session as hashref variables under
+        # the same names
+    }
+}
 
 =head1 AUTHOR
 
